@@ -1,0 +1,6 @@
+[submodule "acpi"]
+	path = acpi
+	url = https://github.com/macmade/XEOS-core-acpi.git
+[submodule "xeos"]
+	path = xeos
+	url = https://github.com/macmade/XEOS-core-xeos.git
