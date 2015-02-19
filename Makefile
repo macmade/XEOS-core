@@ -59,58 +59,21 @@
 
 # $Id$
 
-include ../../Makefile-Config.mk
+include make/Config.mk
+include make/Targets.mk
 
-#-------------------------------------------------------------------------------
-# Display
-#-------------------------------------------------------------------------------
+PROMPT  := XEOS SOURCE CORE
+DEPS    := 
+FILES   := 
 
-PROMPT              := "    ["$(COLOR_GREEN)" XEOS "$(COLOR_NONE)"]> ["$(COLOR_GREEN)" SRC  "$(COLOR_NONE)"]> ["$(COLOR_GREEN)" CORE "$(COLOR_NONE)"]>           *** "
-
-#-------------------------------------------------------------------------------
-# Software arguments
-#-------------------------------------------------------------------------------
-
-ARGS_LD_32          := -T linker.ld $(ARGS_LD_32)
-ARGS_LD_64          := -T linker.ld $(ARGS_LD_64)
-
-#-------------------------------------------------------------------------------
-# Libraries
-#-------------------------------------------------------------------------------
-
-XEOS_LIBS           := -lc99 -lposix -lpthread -liconv -lsystem -lblocks -ldispatch -lobjc -lelf
-
-#-------------------------------------------------------------------------------
-# Built-in targets
-#-------------------------------------------------------------------------------
-
-# Declaration for phony targets, to avoid problems with local files
-.PHONY: all clean
-
-#-------------------------------------------------------------------------------
-# Phony targets
-#-------------------------------------------------------------------------------
-
-# Build the full project
 all:
 	
-	@$(PRINT) $(PROMPT)$(COLOR_CYAN)"Building the ACPI subsystem"$(COLOR_NONE)
-	@$(CD) $(PATH_SRC_CORE_ACPI) && $(MAKE) $(ARGS_MAKE)
+	$(call PRINT,$(COLOR_CYAN)Building the ACPI subsystem$(COLOR_NONE))
+	@cd acpi && $(MAKE)
+	$(call PRINT,$(COLOR_CYAN)Building the XEOS kernel$(COLOR_NONE))
+	@cd xeos && $(MAKE)
 	
-	@$(PRINT) $(PROMPT)$(COLOR_CYAN)"Building the XEOS kernel"$(COLOR_NONE)
-	@$(CD) $(PATH_SRC_CORE_KERNEL) && $(MAKE) $(ARGS_MAKE)
-	
-	@$(PRINT) $(PROMPT)$(COLOR_CYAN)"Linking the XEOS kernel"$(COLOR_NONE)" [ 32 bits ]: "$(COLOR_GRAY)"XEOS32.ELF"$(COLOR_NONE)
-	@$(LD_32) $(ARGS_LD_32) -o $(PATH_BUILD_32_BIN)XEOS32.ELF $(PATH_BUILD_32_OBJ)core-xeos$(EXT_OBJ) $(PATH_BUILD_32_OBJ)core-acpi$(EXT_OBJ) $(PATH_BUILD_32_OBJ)core-acpi-acpica$(EXT_OBJ) -L$(PATH_BUILD_32_BIN) -static $(XEOS_LIBS)
-	
-	@$(PRINT) $(PROMPT)$(COLOR_CYAN)"Linking the XEOS kernel"$(COLOR_NONE)" [ 64 bits ]: "$(COLOR_GRAY)"XEOS64.ELF"$(COLOR_NONE)
-	@$(LD_64) $(ARGS_LD_64) -o $(PATH_BUILD_64_BIN)XEOS64.ELF $(PATH_BUILD_64_OBJ)core-xeos$(EXT_OBJ) $(PATH_BUILD_64_OBJ)core-acpi$(EXT_OBJ) $(PATH_BUILD_64_OBJ)core-acpi-acpica$(EXT_OBJ) -L$(PATH_BUILD_64_BIN) -static $(XEOS_LIBS)
-	
-# Cleans the build files
 clean:
 	
-	@$(CD) $(PATH_SRC_CORE_ACPI) && $(MAKE) $(ARGS_MAKE_CLEAN)
-	@$(CD) $(PATH_SRC_CORE_KERNEL) && $(MAKE) $(ARGS_MAKE_CLEAN)
-	
-	@if [ -f $(PATH_BUILD_32_BIN)XEOS32.ELF ]; then $(RM) $(PATH_BUILD_32_BIN)XEOS32.ELF; fi;
-	@if [ -f $(PATH_BUILD_64_BIN)XEOS64.ELF ]; then $(RM) $(PATH_BUILD_64_BIN)XEOS64.ELF; fi;
+	@cd acpi && $(MAKE) clean
+	@cd xeos && $(MAKE) clean
