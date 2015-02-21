@@ -62,18 +62,17 @@
 include make/Config.mk
 include make/Targets.mk
 
+.NOTPARALLEL:
+
 PROMPT  := XEOS SOURCE CORE
 DEPS    := 
 FILES   := 
+TARGETS := acpi xeos
 
-all:
+all: build-sub
 	
-	$(call PRINT,$(COLOR_CYAN)Building the ACPI subsystem$(COLOR_NONE))
-	@cd acpi && $(MAKE)
-	$(call PRINT,$(COLOR_CYAN)Building the XEOS kernel$(COLOR_NONE))
-	@cd xeos && $(MAKE)
+	@:
+
+clean: clean-sub
 	
-clean:
-	
-	@cd acpi && $(MAKE) clean
-	@cd xeos && $(MAKE) clean
+	@:
